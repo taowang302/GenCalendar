@@ -40,34 +40,27 @@ def get_start_day(year, month):
     # 返回当月1日是星期几，由1800.01.01是星期三推算  
     return 3 + get_total_num_of_day(year, month) % 7  
 
-def get_input_day(month,day):
+def get_input_day(day):
     week_list = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat']
     now_date = datetime.datetime.now().strftime('%m-%d-%a-%Y').split('-')
     now_month = int(now_date[0])
     now_day = int(now_date[1])
     now_week = now_date[2]
     index_week = week_list.index(now_week)
-    if month == now_month:
-        pass
-    elif month > now_month:
-        pass
-    else:
-        pass
-
     if now_day == day:
         input_week = now_week
         index_input_week = index_week
     elif now_day > day:
-        index_input_week = index_week - (now_day - day)%7
+        index_input_week = abs((index_week - (now_day - day)%7)%7)
         input_week = week_list[index_input_week]
     else:
-        index_input_week = index_week + (day - now_day)%7
+        index_input_week = abs((index_week + (day - now_day)%7)%7)
         input_week = week_list[index_input_week]
 
     print input_week,index_input_week
 
-    print_month_title(now_date[3],month)      
-    print_month_body(now_date[3],month,day,index_input_week)
+    print_month_title(now_date[3],now_month)      
+    print_month_body(now_date[3],now_month,day,index_input_week)
 
   
   
@@ -93,7 +86,8 @@ def print_month_body(year,month,day,inx):
     打印日历正文 
     格式说明：空两个空格，每天的长度为5 
     需要注意的是print加逗号会多一个空格 
-    '''  
+    '''
+    month_list = ['一','二','三','四','五','六','七','八','九','十','十一','十二']  
     if inx >0:  
         print '', # 打印行首的两个空格  
         #if day >=10:
@@ -102,18 +96,17 @@ def print_month_body(year,month,day,inx):
             print '    ',
         print'   ' ,  # 从星期几开始则空5*几个空格  
     for j in range(day, get_num_of_days_in_month(year, month)+1):  
-        if j >= 10:
-            print '%4d' %j,
+        if j == 1:
+            print '%5s' %month_list[int(month) - 1],
         else:
             print '%4d' %j, # 宽度控制，4+1=5  
-        inx += 1  
+        inx += 1
+        #i += 1  
         if inx % 7 == 0:  # i用于计数和换行  
             print ' '   # 每换行一次行首继续空格  
   
   
 #   主函数部分  
-month = int(raw_input("Please input target month:"))  
+#month = int(raw_input("Please input target month:"))  
 week = int(raw_input("Please input target week:"))
-get_input_day(month,week) 
-#print_month_title(year, month)  
-#print_month_body(year, month)  
+get_input_day(int(week))
